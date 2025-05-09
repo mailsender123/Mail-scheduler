@@ -1,4 +1,5 @@
-Flask
-APScheduler
-SQLAlchemy
-pytz
+Flask  
+gunicorn  
+APScheduler  
+pytz  
+smtplib
