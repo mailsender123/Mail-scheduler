@@ -1,0 +1,20 @@
+<!-- templates/history.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scheduled Emails</title>
+</head>
+<body>
+    <h2>Scheduled Emails</h2>
+    {% if emails %}
+        <ul>
+        {% for email in emails %}
+            <li>{{ email }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No scheduled emails.</p>
+    {% endif %}
+    <a href="/">Back to Home</a>
+</body>
+</html>
