@@ -1,5 +1,4 @@
 flask
 APScheduler
 SQLAlchemy
-sqlite3
 gunicorn
