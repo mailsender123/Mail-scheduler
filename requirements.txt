@@ -2,4 +2,3 @@ Flask
 gunicorn  
 APScheduler  
 pytz  
-smtplib
