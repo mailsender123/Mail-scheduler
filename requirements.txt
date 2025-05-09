@@ -1,4 +1,5 @@
-Flask  
-gunicorn  
-APScheduler  
-pytz  
+flask
+APScheduler
+SQLAlchemy
+sqlite3
+gunicorn
