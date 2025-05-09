@@ -3,7 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.date import DateTrigger
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from datetime import datetime
-import pytz
+from zoneinfo import ZoneInfo
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -52,8 +52,8 @@ def schedule():
             date_obj = datetime.strptime(data['date'], "%Y-%m-%d").replace(
                 hour=time_parts[0], minute=time_parts[1], second=0
             )
-            local_tz = pytz.timezone("Asia/Kolkata")
-            date_obj = local_tz.localize(date_obj)
+            local_tz = ZoneInfo("Asia/Kolkata")
+            date_obj = date_obj.replace(tzinfo=local_tz)
 
             if date_obj <= datetime.now(local_tz):
                 return render_template("schedule.html", error="Choose a future time.")
