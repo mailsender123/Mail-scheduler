@@ -39,6 +39,10 @@ def schedule():
             elif ampm == 'am' and time_parts[0] == 12:
                 time_parts[0] = 0
 
+            # Validate hour range
+            if not (0 <= time_parts[0] <= 23):
+                raise ValueError("Hour must be in 0..23")
+
             # Create a datetime object with the specified date and time
             date_obj = datetime.strptime(data['date'], "%Y-%m-%d").replace(
                 hour=time_parts[0], minute=time_parts[1], second=0
