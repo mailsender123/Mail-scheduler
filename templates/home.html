@@ -16,30 +16,40 @@
         }
         .container {
             text-align: center;
+            border: 2px solid #007BFF;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+        img {
+            width: 150px;
+            margin-bottom: 10px;
         }
         a {
             margin: 10px;
             text-decoration: none;
             color: #007BFF;
+            font-size: 1.2em;
         }
         a:hover {
             text-decoration: underline;
-        }
-        img {
-            max-width: 150px;
-            margin: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Email Scheduler</h1>
-        <img src="/static/logo.jpg" alt="Email Scheduler Logo">
-        <a href="/register">Register</a>
-        <a href="/login">Login</a>
+        <img src="/static/logo.png" alt="Email Scheduler Logo">
+        <div>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+        </div>
     </div>
 </body>
 </html>
