@@ -8,26 +8,26 @@
     <div class="container">
         <h2>Schedule Email</h2>
         {% if error %}
-            <p style="color: red;">{{ error }}</p>
+            <p>{{ error }}</p>
         {% endif %}
-        <form method="post">
-            <label for="recipient_email">Recipient Email:</label><br>
-            <input type="email" id="recipient_email" name="recipient_email" placeholder="recipient@example.com" required><br>
+        <form action="/schedule" method="POST">
+            <label for="recipient_email">Recipient Email:</label>
+            <input type="email" name="recipient_email" required><br>
             
-            <label for="subject">Subject:</label><br>
-            <input type="text" id="subject" name="subject" placeholder="Email Subject" required><br>
+            <label for="subject">Subject:</label>
+            <input type="text" name="subject" required><br>
             
-            <label for="body">Body:</label><br>
-            <textarea id="body" name="body" placeholder="Message..." required></textarea><br>
+            <label for="body">Message:</label>
+            <textarea name="body" required></textarea><br>
             
-            <label for="date">Date:</label><br>
-            <input type="date" id="date" name="date" required><br>
+            <label for="date">Date:</label>
+            <input type="date" name="date" required><br>
             
-            <label for="time">Time:</label><br>
-            <input type="time" id="time" name="time" required><br>
+            <label for="time">Time:</label>
+            <input type="text" name="time" placeholder="HH:MM" required><br>
             
-            <label for="ampm">AM/PM:</label><br>
-            <select id="ampm" name="ampm" required>
+            <label for="ampm">AM/PM:</label>
+            <select name="ampm">
                 <option value="am">AM</option>
                 <option value="pm">PM</option>
             </select><br>
