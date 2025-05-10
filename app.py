@@ -10,9 +10,16 @@ app.secret_key = "your_secret_key"  # Needed for session management
 scheduler = BackgroundScheduler()
 scheduler.start()
 
+# Function to send email (stub for demonstration)
 def send_email(sender_email, sender_password, recipient_email, subject, body):
     print(f"Email scheduled from {sender_email} to {recipient_email} with subject '{subject}'.")
 
+# Home route
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+# Email scheduling route
 @app.route("/schedule", methods=["GET", "POST"])
 def schedule():
     if request.method == "POST":
@@ -60,3 +67,12 @@ def schedule():
         except Exception as e:
             return render_template("schedule.html", error=str(e))
     return render_template("schedule.html")
+
+# Success route
+@app.route("/success")
+def success():
+    return render_template("success.html")
+
+# Run the Flask app
+if __name__ == "__main__":
+    app.run(debug=True)
