@@ -1,0 +1,22 @@
+<!-- Frontend: dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Dashboard</h2>
+    <form method="post" action="/create_mail">
+        <label>Mailbox Name:</label>
+        <input type="text" name="mail_name" required><br>
+        <button type="submit">Create Mailbox</button>
+    </form>
+    <h3>Your Mailboxes:</h3>
+    <ul>
+        {% for mailbox in mailboxes %}
+            <li>{{ mailbox }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/logout">Logout</a>
+</body>
+</html>
