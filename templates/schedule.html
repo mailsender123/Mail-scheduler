@@ -10,7 +10,7 @@
         {% if error %}
             <p>{{ error }}</p>
         {% endif %}
-        <form action="/schedule" method="post">
+        <form action="/schedule" method="get">
             <label for="recipient_email">Recipient Email:</label>
             <input type="email" name="recipient_email" required><br>
             
