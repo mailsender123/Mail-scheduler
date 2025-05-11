@@ -1,28 +1,27 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.date import DateTrigger
+import asyncio
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import os
-import logging
-
-# Set timezone explicitly for consistency
-os.environ['TZ'] = 'Asia/Kolkata'
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = "your_secret_key"  # Needed for session management
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Initialize scheduler with async handling
+scheduler = BackgroundScheduler()
 
-# Use AsyncIOScheduler for better performance on Render
-scheduler = AsyncIOScheduler()
-scheduler.start()
+async def start_scheduler():
+    if not asyncio.get_event_loop().is_running():
+        asyncio.set_event_loop(asyncio.new_event_loop())
+    scheduler.start()
 
-# Email sending function with detailed error logs
+asyncio.run(start_scheduler())
+
+# Function to send email
 def send_email(sender_email, sender_password, recipient_email, subject, body):
     try:
         msg = MIMEMultipart()
@@ -34,15 +33,12 @@ def send_email(sender_email, sender_password, recipient_email, subject, body):
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
             server.login(sender_email, sender_password)
-            server.sendmail(sender_email, recipient_email, msg.as_string())
-        
-        logging.info(f"Email successfully sent from {sender_email} to {recipient_email}.")
-        return True
+            server.send_message(msg)
+        print(f"Email sent from {sender_email} to {recipient_email}")
     except Exception as e:
-        logging.error(f"Failed to send email from {sender_email} to {recipient_email}. Error: {e}")
-        return False
+        print(f"Failed to send email: {e}")
 
-# Home page route
+# Home route
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -51,34 +47,34 @@ def home():
 @app.route("/schedule", methods=["GET", "POST"])
 def schedule():
     if request.method == "POST":
+        # Store sender info in session if not already done
         if "sender_email" not in session:
             session["sender_email"] = request.form["sender_email"]
             session["sender_password"] = request.form["sender_password"]
-            return render_template("schedule.html")
+            return redirect(url_for("schedule"))
 
         data = request.form
         try:
-            # Time parsing and AM/PM conversion
+            # Parse time and handle AM/PM conversion
             time_parts = list(map(int, data['time'].split(':')))
             ampm = data['ampm'].lower()
             if ampm == 'pm' and time_parts[0] != 12:
                 time_parts[0] += 12
             elif ampm == 'am' and time_parts[0] == 12:
                 time_parts[0] = 0
-            
-            # Construct datetime object
+
+            # Create a datetime object with the specified date and time
             date_obj = datetime.strptime(data['date'], "%Y-%m-%d").replace(
                 hour=time_parts[0], minute=time_parts[1], second=0
             )
             local_tz = ZoneInfo("Asia/Kolkata")
             date_obj = date_obj.replace(tzinfo=local_tz)
 
-            # Validate the scheduled time
+            # Check if the chosen time is in the future
             if date_obj <= datetime.now(local_tz):
-                logging.error("Scheduled time must be in the future.")
                 return render_template("schedule.html", error="Choose a future time.")
 
-            # Add the scheduled job
+            # Schedule the email sending
             scheduler.add_job(
                 send_email,
                 DateTrigger(run_date=date_obj),
@@ -92,18 +88,15 @@ def schedule():
                 id=f"{session['sender_email']}_{date_obj.timestamp()}",
                 replace_existing=True
             )
-            logging.info(f"Email scheduled successfully for {date_obj}.")
-            return redirect(url_for('success'))
+            return redirect(url_for("success"))
         except Exception as e:
-            logging.error(f"Scheduling error: {e}")
             return render_template("schedule.html", error=str(e))
     return render_template("schedule.html")
 
-# Success page route
+# Success route
 @app.route("/success")
 def success():
     return render_template("success.html")
 
-# Run the app
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
