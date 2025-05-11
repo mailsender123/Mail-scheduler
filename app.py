@@ -3,25 +3,22 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.date import DateTrigger
-import asyncio
-import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import smtplib
+import logging
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Needed for session management
 
-# Initialize scheduler with async handling
+# Initialize the scheduler
 scheduler = BackgroundScheduler()
+scheduler.start()
 
-async def start_scheduler():
-    if not asyncio.get_event_loop().is_running():
-        asyncio.set_event_loop(asyncio.new_event_loop())
-    scheduler.start()
+# Enable logging
+logging.basicConfig(level=logging.INFO)
 
-asyncio.run(start_scheduler())
-
-# Function to send email
+# Function to send an email using Gmail's SMTP server
 def send_email(sender_email, sender_password, recipient_email, subject, body):
     try:
         msg = MIMEMultipart()
@@ -30,13 +27,15 @@ def send_email(sender_email, sender_password, recipient_email, subject, body):
         msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
+        # Using SMTP_SSL for better compatibility with Render
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(sender_email, sender_password)
-            server.send_message(msg)
-        print(f"Email sent from {sender_email} to {recipient_email}")
+            server.sendmail(sender_email, recipient_email, msg.as_string())
+        logging.info("Email sent successfully.")
+        return True
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        logging.error(f"Error sending email: {e}")
+        return False
 
 # Home route
 @app.route("/")
@@ -47,7 +46,7 @@ def home():
 @app.route("/schedule", methods=["GET", "POST"])
 def schedule():
     if request.method == "POST":
-        # Store sender info in session if not already done
+        # Save sender info in session
         if "sender_email" not in session:
             session["sender_email"] = request.form["sender_email"]
             session["sender_password"] = request.form["sender_password"]
@@ -70,11 +69,11 @@ def schedule():
             local_tz = ZoneInfo("Asia/Kolkata")
             date_obj = date_obj.replace(tzinfo=local_tz)
 
-            # Check if the chosen time is in the future
+            # Ensure the chosen time is in the future
             if date_obj <= datetime.now(local_tz):
                 return render_template("schedule.html", error="Choose a future time.")
 
-            # Schedule the email sending
+            # Schedule the email
             scheduler.add_job(
                 send_email,
                 DateTrigger(run_date=date_obj),
@@ -85,12 +84,14 @@ def schedule():
                     data['subject'],
                     data['body']
                 ],
-                id=f"{session['sender_email']}_{date_obj.timestamp()}",
-                replace_existing=True
+                id=f"{session['sender_email']}_{date_obj.timestamp()}"
             )
-            return redirect(url_for("success"))
+            logging.info("Email scheduled successfully.")
+            return redirect(url_for('success'))
         except Exception as e:
+            logging.error(f"Scheduling error: {e}")
             return render_template("schedule.html", error=str(e))
+
     return render_template("schedule.html")
 
 # Success route
