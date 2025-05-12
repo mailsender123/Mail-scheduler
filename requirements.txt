@@ -2,3 +2,4 @@ flask
 APScheduler
 SQLAlchemy
 gunicorn
+tzdata
