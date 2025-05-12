@@ -2,5 +2,4 @@ flask
 APScheduler
 SQLAlchemy
 gunicorn
-zoneinfo
 atexit
