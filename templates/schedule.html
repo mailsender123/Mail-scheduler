@@ -2,38 +2,26 @@
 <html>
 <head>
     <title>Schedule Email</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h2>Schedule Email</h2>
-        {% if error %}
-            <p>{{ error }}</p>
-        {% endif %}
-        <form method="post" action="/scheduler">
-            <label for="recipient_email">Recipient Email:</label>
-            <input type="email" name="recipient_email" required><br>
-            
-            <label for="subject">Subject:</label>
-            <input type="text" name="subject" required><br>
-            
-            <label for="body">Message:</label>
-            <textarea name="body" required></textarea><br>
-            
-            <label for="date">Date:</label>
-            <input type="date" name="date" required><br>
-            
-            <label for="time">Time:</label>
-            <input type="text" name="time" placeholder="HH:MM" required><br>
-            
-            <label for="ampm">AM/PM:</label>
-            <select name="ampm">
+        <h2>Schedule an Email</h2>
+        <form action="{{ url_for('schedule_email_route') }}" method="POST">
+            <input type="hidden" name="sender_email" value="{{ request.args.get('sender_email') }}">
+            <input type="hidden" name="sender_password" value="{{ request.args.get('sender_password') }}">
+            <input type="email" name="recipient_email" placeholder="Recipient Email" required>
+            <input type="text" name="subject" placeholder="Subject" required>
+            <textarea name="body" placeholder="Message" required></textarea>
+            <input type="date" name="date" required>
+            <input type="time" name="time" required>
+            <select name="am_pm">
                 <option value="am">AM</option>
                 <option value="pm">PM</option>
-            </select><br>
-            
-            <button type="submit">Scheduler</button>
+            </select>
+            <button type="submit">Schedule Email</button>
         </form>
+        <footer>© 2025 Mail Scheduler</footer>
     </div>
 </body>
 </html>
