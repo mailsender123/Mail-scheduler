@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Home - Email Scheduler</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h2>Enter Sender Details</h2>
-        <form action="/scheduler" method="post">
-            <label for="sender_email">Sender Email:</label>
-            <input type="email" name="sender_email" required><br>
-            <label for="sender_password">Password:</label>
-            <input type="password" name="sender_password" required><br>
-            <button type="submit">Next</button>
+        <h2>Welcome to the Email Scheduler</h2>
+        <form action="{{ url_for('schedule') }}" method="get">
+            <input type="email" name="sender_email" placeholder="Sender Email" required>
+            <input type="password" name="sender_password" placeholder="Password" required>
+            <button type="submit">Proceed to Schedule</button>
         </form>
+        <footer>© 2025 Mail Scheduler</footer>
     </div>
 </body>
 </html>
