@@ -7,7 +7,7 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
-@app.route('/schedule', methods=['GET', 'POST'])
+@app.route('/scheduler', methods=['GET', 'POST'])
 def schedule():
     if request.method == 'POST':
         sender_email = request.form['sender_email']
