@@ -2,4 +2,3 @@ flask
 APScheduler
 SQLAlchemy
 gunicorn
-atexit
