@@ -31,16 +31,24 @@ def schedule_email_route():
 
     try:
         # Parsing date and time correctly
-        time_parts = [int(part) for part in time_str.split(':')]
+        try:
+            time_parts = [int(part) for part in time_str.split(':')]
+            if len(time_parts) != 2:
+                raise ValueError("Invalid time format")
+        except ValueError:
+            raise ValueError("Time must be in HH:MM format")
 
         # Handling 12-hour format conversion
-        try:
-    time_parts = [int(part) for part in time_str.split(':')]
-    if len(time_parts) != 2:
-        raise ValueError("Invalid time format")
-    except ValueError:
-        raise ValueError("Time must be in HH:MM format")
-        
+        if am_pm.lower() == 'pm' and time_parts[0] != 12:
+            time_parts[0] += 12
+        elif am_pm.lower() == 'am' and time_parts[0] == 12:
+            time_parts[0] = 0
+
+        # Ensure hour and minute are within valid ranges
+        if not (0 <= time_parts[0] <= 23):
+            raise ValueError("Hour must be in 0..23")
+        if not (0 <= time_parts[1] <= 59):
+            raise ValueError("Minute must be in 0..59")
 
         # Schedule the email
         message = schedule_email(sender_email, sender_password, recipient_email, subject, body, date, time_str, am_pm)
