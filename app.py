@@ -9,7 +9,7 @@ def home():
 
 @app.route('/scheduler', methods=['GET', 'POST'])
 def scheduler():
-    if request.method == 'POST':
+    if request.method == 'post':
         sender_email = request.form['sender_email']
         sender_password = request.form['sender_password']
         recipient_email = request.form['recipient_email']
