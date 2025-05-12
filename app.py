@@ -8,7 +8,7 @@ def home():
     return render_template('home.html')
 
 @app.route('/scheduler', methods=['GET', 'POST'])
-def schedule():
+def scheduler():
     if request.method == 'POST':
         sender_email = request.form['sender_email']
         sender_password = request.form['sender_password']
