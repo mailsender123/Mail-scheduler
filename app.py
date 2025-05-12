@@ -34,11 +34,12 @@ def schedule_email_route():
         time_parts = [int(part) for part in time_str.split(':')]
 
         # Handling 12-hour format conversion
-        if am_pm.lower() == 'pm' and time_parts[0] != 12:
-            time_parts[0] += 12
-        elif am_pm.lower() == 'am' and time_parts[0] == 12:
-            time_parts[0] = 0
-
+        try:
+    time_parts = [int(part) for part in time_str.split(':')]
+    if len(time_parts) != 2:
+        raise ValueError("Invalid time format")
+except ValueError:
+    raise ValueError("Time must be in HH:MM format")
         # Ensure hour is within 0..23
         if time_parts[0] < 0 or time_parts[0] > 23:
             raise ValueError("Hour must be in 0..23")
