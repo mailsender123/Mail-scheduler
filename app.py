@@ -38,11 +38,9 @@ def schedule_email_route():
     time_parts = [int(part) for part in time_str.split(':')]
     if len(time_parts) != 2:
         raise ValueError("Invalid time format")
-except ValueError:
-    raise ValueError("Time must be in HH:MM format")
-        # Ensure hour is within 0..23
-        if time_parts[0] < 0 or time_parts[0] > 23:
-            raise ValueError("Hour must be in 0..23")
+    except ValueError:
+        raise ValueError("Time must be in HH:MM format")
+        
 
         # Schedule the email
         message = schedule_email(sender_email, sender_password, recipient_email, subject, body, date, time_str, am_pm)
