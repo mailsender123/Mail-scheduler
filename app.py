@@ -29,9 +29,29 @@ def schedule_email_route():
     time_str = request.form.get("time")
     am_pm = request.form.get("am_pm")
 
-    message = schedule_email(sender_email, sender_password, recipient_email, subject, body, date, time_str, am_pm)
-    flash(message)
-    return redirect(url_for("success", message=message))
+    try:
+        # Parsing date and time correctly
+        time_parts = [int(part) for part in time_str.split(':')]
+
+        # Handling 12-hour format conversion
+        if am_pm.lower() == 'pm' and time_parts[0] != 12:
+            time_parts[0] += 12
+        elif am_pm.lower() == 'am' and time_parts[0] == 12:
+            time_parts[0] = 0
+
+        # Ensure hour is within 0..23
+        if time_parts[0] < 0 or time_parts[0] > 23:
+            raise ValueError("Hour must be in 0..23")
+
+        # Schedule the email
+        message = schedule_email(sender_email, sender_password, recipient_email, subject, body, date, time_str, am_pm)
+        flash(message)
+        return redirect(url_for("success", message=message))
+
+    except Exception as e:
+        error_message = f"Error scheduling email: {e}"
+        flash(error_message)
+        return redirect(url_for("success", message=error_message))
 
 @app.route('/success')
 def success():
