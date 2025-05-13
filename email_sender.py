@@ -1,10 +1,20 @@
-import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 def send_email(sender_email, sender_password, recipient_email, subject, body):
     try:
-        logging.info(f"Sending email to {recipient_email} with subject: {subject}")
-        print(f"Email sent to {recipient_email} with subject: {subject}")
-        return True
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        # SMTP server configuration
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+            print("Email sent successfully!")
     except Exception as e:
-        logging.error(f"Failed to send email: {e}")
-        return False
+        print(f"Error sending email: {e}")
