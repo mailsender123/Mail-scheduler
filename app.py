@@ -1,8 +1,8 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
 import os
-from scheduler import schedule_email
+from scheduler import schedule_email, start_scheduler
+from multiprocessing import Process
 
-# Initialize the Flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 
@@ -24,7 +24,7 @@ def schedule_email_route():
     subject = request.form.get("subject")
     body = request.form.get("body")
     date = request.form.get("date")
-    time_str = request.form.get("time")  # Directly get the time input from the form
+    time_str = request.form.get("time")
 
     try:
         # Schedule the email
@@ -43,4 +43,7 @@ def success():
     return render_template('success.html', message=message)
 
 if __name__ == "__main__":
+    # Start the scheduler as a separate process
+    p = Process(target=start_scheduler)
+    p.start()
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
