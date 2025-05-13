@@ -56,7 +56,7 @@ def schedule_email_route():
             raise ValueError("Minute must be in 0..59")
 
         # Check if the scheduled time is in the past
-        scheduled_datetime = datetime.strptime(f"{date} {time_parts[0]:02d}:{time_parts[1]:02d}", "%Y-%m-%d %H:%M")
+        scheduled_datetime = datetime.strptime(f"{date} {time_parts[0]:02d}:{time_parts[1]:02d}", "%d-%m-%y %H:%M")
         if scheduled_datetime <= datetime.now():
             raise ValueError("Scheduled time is in the past.")
 
