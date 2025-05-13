@@ -5,10 +5,17 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
+    <div class="message-box">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <h2>{{ message }}</h2>
         <a href="{{ url_for('home') }}">Back to Home</a>
-        <footer>© 2025 Mail Scheduler</footer>
     </div>
+    <footer>© 2025 Mail Scheduler</footer>
 </body>
 </html>
