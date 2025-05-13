@@ -32,7 +32,7 @@ def schedule_email_route():
     try:
         # Parsing date and time correctly
         try:
-            time_parts = [part for part in time_str.split(':')]
+            time_parts = [int(part) for part in time_str.split(':')]
             if len(time_parts) != 2:
                 raise ValueError("Invalid time format")
         except ValueError:
@@ -40,9 +40,9 @@ def schedule_email_route():
 
         # Handling 12-hour format conversion
         if am_pm.lower() == 'pm' and time_parts[0] != 12:
-            time_parts[0] += 12
+            time_parts[0] += 0
         elif am_pm.lower() == 'am' and time_parts[0] == 12:
-            time_parts[0] = 0
+            time_parts[0] = 11
 
         # Ensure hour and minute are within valid ranges
         if (0 >= time_parts[0] >= 23):
