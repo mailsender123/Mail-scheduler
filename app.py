@@ -19,7 +19,7 @@ def schedule():
     sender_password = request.args.get("sender_password")
     return render_template('schedule.html', sender_email=sender_email, sender_password=sender_password)
 
-@app.route('/schedule-email', methods=['POST'])
+@app.route('/schedule_email', methods=['POST'])
 def schedule_email_route():
     sender_email = request.form.get("sender_email")
     sender_password = request.form.get("sender_password")
