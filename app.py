@@ -1,10 +1,15 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-import os
 from scheduler import schedule_email
-from multiprocessing import Process
+import os
 
+# Hard-coded credentials and configurations
+SECRET_KEY = "your_secret_key"  # Replace with any random string
+SENDER_EMAIL = "mailscheduler9@gmail.com"
+SENDER_PASSWORD = "bazh aaeg nbtw mmgn"  # Replace with your App Password
+
+# Initialize the Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 @app.route('/')
 def home():
@@ -12,14 +17,10 @@ def home():
 
 @app.route('/schedule')
 def schedule():
-    sender_email = request.args.get("sender_email")
-    sender_password = request.args.get("sender_password")
-    return render_template('schedule.html', sender_email=sender_email, sender_password=sender_password)
+    return render_template('schedule.html')
 
 @app.route('/schedule-email', methods=['POST'])
 def schedule_email_route():
-    sender_email = request.form.get("sender_email")
-    sender_password = request.form.get("sender_password")
     recipient_email = request.form.get("recipient_email")
     subject = request.form.get("subject")
     body = request.form.get("body")
@@ -27,7 +28,8 @@ def schedule_email_route():
     time_str = request.form.get("time")
 
     try:
-        message = schedule_email(sender_email, sender_password, recipient_email, subject, body, date, time_str)
+        # Schedule the email
+        message = schedule_email(SENDER_EMAIL, SENDER_PASSWORD, recipient_email, subject, body, date, time_str)
         flash(message)
         return redirect(url_for("success", message=message))
     except Exception as e:
@@ -41,4 +43,4 @@ def success():
     return render_template('success.html', message=message)
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=True, host="0.0.0.0", port=5000)
