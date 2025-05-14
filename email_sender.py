@@ -9,8 +9,8 @@ def send_email(sender_email, sender_password, recipient_email, subject, body):
         msg['To'] = recipient_email
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
-        send=server.schedule_email(sender_email, sender_password, recipient_email, subject, body)
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        send=server.schedule_email(sender_email, sender_password, recipient_email, subject, body
+with smtplib.SMTP('smtp.gmail.com', 587) as server:
             send.starttls()
             send.login(sender_email, sender_password)
             send.send_message(msg)
