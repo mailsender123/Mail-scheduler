@@ -4,8 +4,8 @@ import os
 
 # Hard-coded credentials and configurations
 SECRET_KEY = "your_secret_key"  # Replace with any random string
-SENDER_EMAIL = "mailscheduler9@gmail.com"
-SENDER_PASSWORD = "bazh aaeg nbtw mmgn"  # Replace with your App Password
+SENDER_EMAIL = "mailscheduler030@gmail.com"
+SENDER_PASSWORD = "boom cggz kbxr fikz"  # Replace with your App Password
 
 # Initialize the Flask app
 app = Flask(__name__)
