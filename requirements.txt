@@ -1,5 +1,3 @@
-flask
+Flask
 APScheduler
-SQLAlchemy
 gunicorn
-tzdata
